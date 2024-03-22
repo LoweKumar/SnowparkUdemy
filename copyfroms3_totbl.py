@@ -19,7 +19,7 @@ from snowflake.snowpark.types import IntegerType, StringType, StructField, Struc
 # Replace the below connection_parameters with your respective snowflake account,user name and password
 # connection_parameters = {"account":"lr58752.ap-south-1",
 # "user":"Lowekumar",
-# "password": "Rudra@98351",
+# "password": "***",
 # "role":"ACCOUNTADMIN",
 # "warehouse":"COMPUTE_WH",
 # "database":"DB1",
@@ -28,7 +28,7 @@ from snowflake.snowpark.types import IntegerType, StringType, StructField, Struc
 
 connection_parameters = {"account":"eg24753.ap-south-1",
 "user":"Lowekumar28",
-"password": "Rudra@983517",
+"password": "***",
 "role":"ACCOUNTADMIN",
 "warehouse":"COMPUTE_WH",
 "database":"DB1",
