@@ -20,9 +20,10 @@ employee_s3_json = session.read.json('@my_s3_stage_jsondata')
 # employee_s3_json.show()
 # employee_s3_json.cache_result()
 
-employee_s3_json = employee_s3_json.select(col("$1").as_("new_col")).show()
+# employee_s3_json = employee_s3_json.select(col("$1").as_("new_col")).show()
 
-# employee_s3_json = employee_s3_json.select_expr("$1:author","$1:id","$1:cat")
+employee_s3_json = employee_s3_json.select_expr("$1:author","$1:id","$1:cat")
+employee_s3_json.show()
 # employee_s3_json.cache_result()
 
 # employee_s3_json.schema

@@ -1,0 +1,116 @@
+======================================================
+Section 9 - Assignments - Transformation and query
+======================================================
+
+Provided SQL query need to convert that to a snowpark code
+
+Prepare data :
+----------------
+CREATE TABLE DEPARTMENT
+(
+   DEPTCODE   INTEGER,
+   DeptName   CHAR(30),
+   LOCATION   VARCHAR(33)
+);
+
+CREATE TABLE EMPLY
+(
+   EmpCode      INTEGER,
+   EmpFName     VARCHAR(15),
+   EmpLName     VARCHAR(15),
+   Job          VARCHAR(45),
+   Manager      CHAR(4),
+   HireDate     DATE,
+   Salary       INTEGER,
+   Commission   INTEGER,
+   DEPTCODE     INTEGER
+);
+
+INSERT INTO DEPARTMENT VALUES (10, 'FINANCE', 'EDINBURGH'),
+                              (20,'SOFTWARE','PADDINGTON'),
+                              (30, 'SALES', 'MAIDSTONE'),
+                              (40,'MARKETING', 'DARLINGTON'),
+                              (50,'ADMIN', 'BIRMINGHAM');
+
+
+INSERT INTO EMPLY 
+VALUES (9369, 'TONY', 'STARK', 'SOFTWARE ENGINEER', 7902, '1980-12-17', 2800,0,20),
+       (9499, 'TIM', 'ADOLF', 'SALESMAN', 7698, '1981-02-20', 1600, 300,30),    
+       (9566, 'KIM', 'JARVIS', 'MANAGER', 7839, '1981-04-02', 3570,0,20),
+       (9654, 'SAM', 'MILES', 'SALESMAN', 7698, '1981-09-28', 1250, 1400, 30),
+       (9782, 'KEVIN', 'HILL', 'MANAGER', 7839, '1981-06-09', 2940,0,10),
+       (9788, 'CONNIE', 'SMITH', 'ANALYST', 7566, '1982-12-09', 3000,0,20),
+       (9839, 'ALFRED', 'KINSLEY', 'PRESIDENT', 7566, '1981-11-17', 5000,0, 10),
+       (9844, 'PAUL', 'TIMOTHY', 'SALESMAN', 7698, '1981-09-08', 1500,0,30),
+       (9876, 'JOHN', 'ASGHAR', 'SOFTWARE ENGINEER', 7788, '1983-01-12',3100,0,20),
+       (9900, 'ROSE', 'SUMMERS', 'TECHNICAL LEAD', 7698, '1981-12-03', 2950,0, 20),
+       (9902, 'ANDREW', 'FAULKNER', 'ANAYLYST', 7566, '1981-12-03', 3000,0, 10),
+       (9934, 'KAREN', 'MATTHEWS', 'SOFTWARE ENGINEER', 7782, '1982-01-23', 3300,0,20),
+       (9591, 'WENDY', 'SHAWN', 'SALESMAN', 7698, '1981-02-22', 500,0,30),
+       (9698, 'BELLA', 'SWAN', 'MANAGER', 7839, '1981-05-01', 3420, 0,30),
+       (9777, 'MADII', 'HIMBURY', 'ANALYST', 7839, '1981-05-01', 2000, 200, NULL),
+       (9860, 'ATHENA', 'WILSON', 'ANALYST', 7839, '1992-06-21', 7000, 100, 50),
+       (9861, 'JENNIFER', 'HUETTE', 'ANALYST', 7839, '1996-07-01', 5000, 100, 50);
+
+-------------------------------------------------------------------------------------------------
+Assignment 14: Read and order data in snowpark
+-------------------------------------------------------------------------------------------------
+
+Consider below SQL code,
+
+SELECT E.EMPFNAME, E.EMPLNAME, E.DEPTCODE, D.DEPTNAME, D.LOCATION       
+FROM EMPLOYEE E, DEPARTMENT D       
+WHERE E.DEPTCODE = D.DEPTCODE       
+ORDER BY E.EMPFNAME, D.LOCATION;
+
+Convert this SQL code to SNOWPARK code and create a dataframe by name, emp_dpt_join
+
+------------
+Solution :
+------------
+
+STEP 1: Read data from EMPLOYEE and LOCATION to dataframe, emp_stg_tbl and emp_dpt_tbl
+
+emp_stg_tbl = session.table("DB1.PUBLIC.EMPLY")
+emp_dpt_tbl = session.table("DB1.PUBLIC.DEPARTMENT")
+
+
+STEP 2: Join dataframe, emp_stg_tbl and emp_dpt_tbl by column DEPTCODE and create data-frame, emp_dpt_join
+
+emp_dpt_join = emp_stg_tbl.join(emp_dpt_tbl,"DEPTCODE","Inner")
+# alternate solution
+# emp_dpt_join = emp_stg_tbl.join(emp_dpt_tbl,emp_dpt_tbl.col("DEPTCODE") == emp_stg_tbl.col("DEPTCODE"))
+# alternate solution 
+# emp_dpt_join = emp_stg_tbl.join(emp_dpt_tbl,emp_dpt_tbl.DEPTCODE == emp_stg_tbl.DEPTCODE)
+# alternate solution
+# emp_dpt_join = emp_stg_tbl.join(emp_dpt_tbl,emp_dpt_tbl.DEPTCODE == emp_stg_tbl.DEPTCODE,"Inner")
+
+
+
+
+STEP3: Select only columns, "EMPFNAME","EMPLNAME","DEPTCODE","DEPTNAME","LOCATION"  from data-frame emp_dpt_join and create data-frame by name, emp_dpt_select
+
+emp_dpt_select = emp_dpt_join.select("EMPFNAME","EMPLNAME","DEPTCODE","DEPTNAME","LOCATION")
+# alternate solution 
+# emp_dpt_select = emp_dpt_join.select(col("EMPFNAME"),col("EMPLNAME"),col("DEPTCODE"),col("DEPTNAME"),col("LOCATION"))
+# alternate solution 
+# emp_dpt_select = emp_dpt_join.select(["EMPFNAME","EMPLNAME","DEPTCODE","DEPTNAME","LOCATION"])
+# alternate solution 
+# emp_dpt_select = emp_dpt_join.select(emp_dpt_join.EMPFNAME, emp_dpt_join.EMPLNAME, emp_dpt_join.DEPTCODE, emp_dpt_join.DEPTNAME, emp_dpt_join.LOCATION)
+# alternate solution 
+# emp_dpt_select = emp_dpt_join.select(emp_dpt_join["EMPFNAME"],emp_dpt_join["EMPLNAME"],emp_dpt_join["DEPTCODE"],emp_dpt_join["DEPTNAME"],emp_dpt_join["LOCATION"])
+
+
+STEP4: Mention command to order column by EMPFNAME in ascending order and create dataframe by name, emp_dpt_order_by
+
+emp_dpt_order_by = emp_dpt_select.order_by("EMPFNAME",ascending=True)
+result = emp_dpt_order_by.collect()
+print(result)
+
+
+
+
+
+-------------------------------------------------------------------------------------------------
+Assignment 15: Read and aggregate by column name
+-------------------------------------------------------------------------------------------------
