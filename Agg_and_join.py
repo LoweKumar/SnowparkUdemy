@@ -7,7 +7,7 @@ from snowflake.snowpark.types import IntegerType, StringType, StructField, Struc
 
 connection_parameters = {"account":"lr58752.ap-south-1",
 "user":"Lowekumar",
-"password": "Rudra@98351",
+"password": "***",
 "role":"ACCOUNTADMIN",
 "warehouse":"COMPUTE_WH",
 "database":"DB1",
