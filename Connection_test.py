@@ -5,7 +5,7 @@ from snowflake.snowpark.functions import col
 
 connection_parameters = {"account":"lr58752.ap-south-1",
 "user":"Lowekumar",
-"password": "Rudra@98351",
+"password": "***",
 "role":"ACCOUNTADMIN",
 "warehouse":"COMPUTE_WH",
 "database":"SNOWFLAKE_SAMPLE_DATA",
