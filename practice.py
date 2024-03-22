@@ -5,7 +5,7 @@ import snowflake.connector
 # https://lr58752.ap-south-1.aws.snowflakecomputing.com
 ctx = snowflake.connector.connect(
     user='Lowekumar',
-    password = 'Rudra@98351',
+    password = '***',
     account = 'lr58752',
     region ='ap-south-1.aws',
     Role = 'ACCOUNTADMIN',
